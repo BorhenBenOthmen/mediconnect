@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://mediconnect.com/soap/services"
+           targetNamespace="http://mediconnect.com/soap/services"
+           elementFormDefault="qualified">
+
+    <!-- ============================================ -->
+    <!-- Types de base -->
+    <!-- ============================================ -->
+
+    <!-- Patient -->
+    <xs:complexType name="Patient">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="0"/>
+            <xs:element name="nom" type="xs:string"/>
+            <xs:element name="prenom" type="xs:string"/>
+            <xs:element name="dateNaissance" type="xs:date"/>
+            <xs:element name="telephone" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="adresse" type="xs:string"/>
+            <xs:element name="numeroSecuriteSociale" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Médecin -->
+    <xs:complexType name="Medecin">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="0"/>
+            <xs:element name="nom" type="xs:string"/>
+            <xs:element name="prenom" type="xs:string"/>
+            <xs:element name="specialite" type="xs:string"/>
+            <xs:element name="telephone" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="numeroOrdre" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Rendez-vous -->
+    <xs:complexType name="RendezVous">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="0"/>
+            <xs:element name="patientId" type="xs:long"/>
+            <xs:element name="medecinId" type="xs:long"/>
+            <xs:element name="dateRendezVous" type="xs:dateTime"/>
+            <xs:element name="motif" type="xs:string"/>
+            <xs:element name="statut" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Dossier Médical -->
+    <xs:complexType name="DossierMedical">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" minOccurs="0"/>
+            <xs:element name="patientId" type="xs:long"/>
+            <xs:element name="medecinId" type="xs:long"/>
+            <xs:element name="dateConsultation" type="xs:dateTime"/>
+            <xs:element name="diagnostic" type="xs:string"/>
+            <xs:element name="traitement" type="xs:string"/>
+            <xs:element name="notes" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS PATIENTS -->
+    <!-- ============================================ -->
+
+    <!-- Créer Patient -->
+    <xs:element name="CreerPatientRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patient" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerPatientResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patient" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Patient par ID -->
+    <xs:element name="ObtenirPatientRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirPatientResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patient" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Lister tous les Patients -->
+    <xs:element name="ListerPatientsRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListerPatientsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patients" type="tns:Patient" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS MÉDECINS -->
+    <!-- ============================================ -->
+
+    <!-- Créer Médecin -->
+    <xs:element name="CreerMedecinRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecin" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerMedecinResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecin" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Médecin par ID -->
+    <xs:element name="ObtenirMedecinRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirMedecinResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecin" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Lister tous les Médecins -->
+    <xs:element name="ListerMedecinsRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListerMedecinsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecins" type="tns:Medecin" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS RENDEZ-VOUS -->
+    <!-- ============================================ -->
+
+    <!-- Créer Rendez-vous -->
+    <xs:element name="CreerRendezVousRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerRendezVousResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Rendez-vous par ID -->
+    <xs:element name="ObtenirRendezVousRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirRendezVousResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Lister Rendez-vous par Médecin -->
+    <xs:element name="ListerRendezVousParMedecinRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecinId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListerRendezVousParMedecinResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS DOSSIERS MÉDICAUX -->
+    <!-- ============================================ -->
+
+    <!-- Créer Dossier Médical -->
+    <xs:element name="CreerDossierMedicalRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dossierMedical" type="tns:DossierMedical"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerDossierMedicalResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dossierMedical" type="tns:DossierMedical"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Dossiers par Patient -->
+    <xs:element name="ObtenirDossiersParPatientRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patientId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirDossiersParPatientResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dossiersMedicaux" type="tns:DossierMedical" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
