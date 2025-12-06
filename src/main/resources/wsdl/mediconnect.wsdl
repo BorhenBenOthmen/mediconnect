@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://mediconnect.com/soap/services" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://mediconnect.com/soap/services" targetNamespace="http://mediconnect.com/soap/services">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://mediconnect.com/soap/services">
+
+    <!-- ============================================ -->
+    <!-- Types de base -->
+    <!-- ============================================ -->
+
+    <!-- Patient -->
+    <xs:complexType name="Patient">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="id" type="xs:long"/>
+            <xs:element name="nom" type="xs:string"/>
+            <xs:element name="prenom" type="xs:string"/>
+            <xs:element name="dateNaissance" type="xs:date"/>
+            <xs:element name="telephone" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="adresse" type="xs:string"/>
+            <xs:element name="numeroSecuriteSociale" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Médecin -->
+    <xs:complexType name="Medecin">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="id" type="xs:long"/>
+            <xs:element name="nom" type="xs:string"/>
+            <xs:element name="prenom" type="xs:string"/>
+            <xs:element name="specialite" type="xs:string"/>
+            <xs:element name="telephone" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="numeroOrdre" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Rendez-vous -->
+    <xs:complexType name="RendezVous">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="id" type="xs:long"/>
+            <xs:element name="patientId" type="xs:long"/>
+            <xs:element name="medecinId" type="xs:long"/>
+            <xs:element name="dateRendezVous" type="xs:dateTime"/>
+            <xs:element name="motif" type="xs:string"/>
+            <xs:element name="statut" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Dossier Médical -->
+    <xs:complexType name="DossierMedical">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="id" type="xs:long"/>
+            <xs:element name="patientId" type="xs:long"/>
+            <xs:element name="medecinId" type="xs:long"/>
+            <xs:element name="dateConsultation" type="xs:dateTime"/>
+            <xs:element name="diagnostic" type="xs:string"/>
+            <xs:element name="traitement" type="xs:string"/>
+            <xs:element name="notes" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS PATIENTS -->
+    <!-- ============================================ -->
+
+    <!-- Créer Patient -->
+    <xs:element name="CreerPatientRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patient" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerPatientResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patient" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Patient par ID -->
+    <xs:element name="ObtenirPatientRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirPatientResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patient" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Lister tous les Patients -->
+    <xs:element name="ListerPatientsRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListerPatientsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="patients" type="tns:Patient"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS MÉDECINS -->
+    <!-- ============================================ -->
+
+    <!-- Créer Médecin -->
+    <xs:element name="CreerMedecinRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecin" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerMedecinResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecin" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Médecin par ID -->
+    <xs:element name="ObtenirMedecinRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirMedecinResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecin" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Lister tous les Médecins -->
+    <xs:element name="ListerMedecinsRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListerMedecinsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="medecins" type="tns:Medecin"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS RENDEZ-VOUS -->
+    <!-- ============================================ -->
+
+    <!-- Créer Rendez-vous -->
+    <xs:element name="CreerRendezVousRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerRendezVousResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Rendez-vous par ID -->
+    <xs:element name="ObtenirRendezVousRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirRendezVousResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Lister Rendez-vous par Médecin -->
+    <xs:element name="ListerRendezVousParMedecinRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medecinId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListerRendezVousParMedecinResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="rendezVous" type="tns:RendezVous"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ============================================ -->
+    <!-- OPÉRATIONS DOSSIERS MÉDICAUX -->
+    <!-- ============================================ -->
+
+    <!-- Créer Dossier Médical -->
+    <xs:element name="CreerDossierMedicalRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dossierMedical" type="tns:DossierMedical"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreerDossierMedicalResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dossierMedical" type="tns:DossierMedical"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Obtenir Dossiers par Patient -->
+    <xs:element name="ObtenirDossiersParPatientRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="patientId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ObtenirDossiersParPatientResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="dossiersMedicaux" type="tns:DossierMedical"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="CreerPatientResponse">
+    <wsdl:part element="tns:CreerPatientResponse" name="CreerPatientResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerRendezVousRequest">
+    <wsdl:part element="tns:CreerRendezVousRequest" name="CreerRendezVousRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirPatientResponse">
+    <wsdl:part element="tns:ObtenirPatientResponse" name="ObtenirPatientResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ListerMedecinsRequest">
+    <wsdl:part element="tns:ListerMedecinsRequest" name="ListerMedecinsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerMedecinResponse">
+    <wsdl:part element="tns:CreerMedecinResponse" name="CreerMedecinResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ListerMedecinsResponse">
+    <wsdl:part element="tns:ListerMedecinsResponse" name="ListerMedecinsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerRendezVousResponse">
+    <wsdl:part element="tns:CreerRendezVousResponse" name="CreerRendezVousResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirPatientRequest">
+    <wsdl:part element="tns:ObtenirPatientRequest" name="ObtenirPatientRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerMedecinRequest">
+    <wsdl:part element="tns:CreerMedecinRequest" name="CreerMedecinRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirDossiersParPatientResponse">
+    <wsdl:part element="tns:ObtenirDossiersParPatientResponse" name="ObtenirDossiersParPatientResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ListerRendezVousParMedecinResponse">
+    <wsdl:part element="tns:ListerRendezVousParMedecinResponse" name="ListerRendezVousParMedecinResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerDossierMedicalRequest">
+    <wsdl:part element="tns:CreerDossierMedicalRequest" name="CreerDossierMedicalRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirDossiersParPatientRequest">
+    <wsdl:part element="tns:ObtenirDossiersParPatientRequest" name="ObtenirDossiersParPatientRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirMedecinResponse">
+    <wsdl:part element="tns:ObtenirMedecinResponse" name="ObtenirMedecinResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ListerPatientsRequest">
+    <wsdl:part element="tns:ListerPatientsRequest" name="ListerPatientsRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerDossierMedicalResponse">
+    <wsdl:part element="tns:CreerDossierMedicalResponse" name="CreerDossierMedicalResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirRendezVousRequest">
+    <wsdl:part element="tns:ObtenirRendezVousRequest" name="ObtenirRendezVousRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ListerPatientsResponse">
+    <wsdl:part element="tns:ListerPatientsResponse" name="ListerPatientsResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirRendezVousResponse">
+    <wsdl:part element="tns:ObtenirRendezVousResponse" name="ObtenirRendezVousResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ListerRendezVousParMedecinRequest">
+    <wsdl:part element="tns:ListerRendezVousParMedecinRequest" name="ListerRendezVousParMedecinRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreerPatientRequest">
+    <wsdl:part element="tns:CreerPatientRequest" name="CreerPatientRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ObtenirMedecinRequest">
+    <wsdl:part element="tns:ObtenirMedecinRequest" name="ObtenirMedecinRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MediConnectPort">
+    <wsdl:operation name="CreerPatient">
+      <wsdl:input message="tns:CreerPatientRequest" name="CreerPatientRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:CreerPatientResponse" name="CreerPatientResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreerRendezVous">
+      <wsdl:input message="tns:CreerRendezVousRequest" name="CreerRendezVousRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:CreerRendezVousResponse" name="CreerRendezVousResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirPatient">
+      <wsdl:input message="tns:ObtenirPatientRequest" name="ObtenirPatientRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ObtenirPatientResponse" name="ObtenirPatientResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListerMedecins">
+      <wsdl:input message="tns:ListerMedecinsRequest" name="ListerMedecinsRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ListerMedecinsResponse" name="ListerMedecinsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreerMedecin">
+      <wsdl:input message="tns:CreerMedecinRequest" name="CreerMedecinRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:CreerMedecinResponse" name="CreerMedecinResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirDossiersParPatient">
+      <wsdl:input message="tns:ObtenirDossiersParPatientRequest" name="ObtenirDossiersParPatientRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ObtenirDossiersParPatientResponse" name="ObtenirDossiersParPatientResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListerRendezVousParMedecin">
+      <wsdl:input message="tns:ListerRendezVousParMedecinRequest" name="ListerRendezVousParMedecinRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ListerRendezVousParMedecinResponse" name="ListerRendezVousParMedecinResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreerDossierMedical">
+      <wsdl:input message="tns:CreerDossierMedicalRequest" name="CreerDossierMedicalRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:CreerDossierMedicalResponse" name="CreerDossierMedicalResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirMedecin">
+      <wsdl:input message="tns:ObtenirMedecinRequest" name="ObtenirMedecinRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ObtenirMedecinResponse" name="ObtenirMedecinResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListerPatients">
+      <wsdl:input message="tns:ListerPatientsRequest" name="ListerPatientsRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ListerPatientsResponse" name="ListerPatientsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirRendezVous">
+      <wsdl:input message="tns:ObtenirRendezVousRequest" name="ObtenirRendezVousRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:ObtenirRendezVousResponse" name="ObtenirRendezVousResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MediConnectPortSoap11" type="tns:MediConnectPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="CreerPatient">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CreerPatientRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreerPatientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreerRendezVous">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CreerRendezVousRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreerRendezVousResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirPatient">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ObtenirPatientRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ObtenirPatientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListerMedecins">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ListerMedecinsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ListerMedecinsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreerMedecin">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CreerMedecinRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreerMedecinResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirDossiersParPatient">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ObtenirDossiersParPatientRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ObtenirDossiersParPatientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListerRendezVousParMedecin">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ListerRendezVousParMedecinRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ListerRendezVousParMedecinResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreerDossierMedical">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CreerDossierMedicalRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreerDossierMedicalResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirMedecin">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ObtenirMedecinRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ObtenirMedecinResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListerPatients">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ListerPatientsRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ListerPatientsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ObtenirRendezVous">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ObtenirRendezVousRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ObtenirRendezVousResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MediConnectPortService">
+    <wsdl:port binding="tns:MediConnectPortSoap11" name="MediConnectPortSoap11">
+      <soap:address location="http://localhost:8080/ws"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
