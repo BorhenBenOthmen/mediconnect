@@ -23,8 +23,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
-
     <dependencies>
         <!-- Spring Boot Web Services (SOAP) -->
         <dependency>
@@ -77,6 +75,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- WSDL4J (Obligatoire pour générer le WSDL) -->
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+        </dependency>
+
         <!-- Spring Boot Starter Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -103,23 +107,24 @@
 
             <!-- Plugin JAXB pour générer les classes depuis XSD -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.15.3</version>
                 <executions>
                     <execution>
-                        <id>xjc</id>
                         <goals>
-                            <goal>xjc</goal>
+                            <goal>generate</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
                 <configuration>
-                    <sources>
-                        <source>${project.basedir}/src/main/resources/xsd</source>
-                    </sources>
-                    <packageName>com.mediconnect.soap.generated</packageName>
-                    <clearOutputDir>false</clearOutputDir>
+                    <schemaDirectory>${project.basedir}/src/main/resources/xsd</schemaDirectory>
+                    <schemaIncludes>
+                        <include>*.xsd</include>
+                    </schemaIncludes>
+                    <generatePackage>com.mediconnect.soap.generated</generatePackage>
+                    <generateDirectory>${project.basedir}/target/generated-sources/jaxb</generateDirectory>
                 </configuration>
             </plugin>
         </plugins>
