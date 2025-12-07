@@ -123,26 +123,27 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin JAXB pour générer le client SOAP -->
+            <!-- Plugin JAX-WS pour générer le client SOAP depuis WSDL -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>4.0.0</version>
                 <executions>
                     <execution>
-                        <id>xjc</id>
                         <goals>
-                            <goal>xjc</goal>
+                            <goal>wsimport</goal>
                         </goals>
+                        <configuration>
+                            <wsdlDirectory>${project.basedir}/src/main/resources/wsdl</wsdlDirectory>
+                            <wsdlFiles>
+                                <wsdlFile>mediconnect.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>com.mediconnect.rest.soap.client</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
+                            <keep>true</keep>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <sources>
-                        <source>${project.basedir}/src/main/resources/wsdl</source>
-                    </sources>
-                    <packageName>com.mediconnect.rest.soap.client</packageName>
-                    <clearOutputDir>false</clearOutputDir>
-                </configuration>
             </plugin>
         </plugins>
     </build>
