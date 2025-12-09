@@ -1,38 +1,41 @@
+// ==================== DossierMedicalService.java ====================
 package com.mediconnect.rest.service;
 
 import com.mediconnect.rest.dto.DossierMedicalDTO;
 import com.mediconnect.rest.soap.MediConnectSoapClient;
+import com.mediconnect.rest.soap.SoapDtoMapper;
+import com.mediconnect.rest.soap.client.CreerDossierMedicalResponse;
+import com.mediconnect.rest.soap.client.ObtenirDossiersParPatientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Service REST pour gérer les dossiers médicaux
- * Consomme le service SOAP
- * Chemin: src/main/java/com/mediconnect/rest/service/DossierMedicalService.java
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class DossierMedicalService {
 
     private final MediConnectSoapClient soapClient;
+    private final SoapDtoMapper mapper;
 
-    /**
-     * Créer un nouveau dossier médical
-     */
     public DossierMedicalDTO creerDossierMedical(DossierMedicalDTO dossierDTO) {
-        log.info("REST -> SOAP: Création dossier médical");
-        return soapClient.creerDossierMedical(dossierDTO);
+        log.info("REST → SOAP: Création dossier médical patient ID: {}", dossierDTO.getPatientId());
+
+        var request = mapper.dossierDtoToCrerRequest(dossierDTO);
+        CreerDossierMedicalResponse response = soapClient.creerDossierMedical(request);
+
+        return mapper.creerDossierResponseToDto(response);
     }
 
-    /**
-     * Obtenir les dossiers d'un patient
-     */
     public List<DossierMedicalDTO> obtenirDossiersParPatient(Long patientId) {
-        log.info("REST -> SOAP: Récupération dossiers patient ID: {}", patientId);
-        return soapClient.obtenirDossiersParPatient(patientId);
+        log.info("REST → SOAP: Récupération dossiers patient ID: {}", patientId);
+
+        var request = mapper.buildObtenirDossiersRequest(patientId);
+        ObtenirDossiersParPatientResponse response = soapClient.obtenirDossiersParPatient(request);
+
+        return mapper.obtenirDossiersResponseToDto(response);
     }
 }

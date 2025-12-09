@@ -1,187 +1,172 @@
 package com.mediconnect.rest.soap;
 
-import com.mediconnect.rest.dto.*;
-import lombok.RequiredArgsConstructor;
+import com.mediconnect.rest.soap.client.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+import jakarta.annotation.PostConstruct;
+import java.net.URL;
 
 /**
- * Client SOAP pour communiquer avec le service SOAP
- * NOTE: Cette classe utilise les classes générées depuis le WSDL
- * Vous devez d'abord copier le WSDL et exécuter: mvn generate-sources
- *
+ * Client SOAP pour communiquer avec le service MediConnect
  * Chemin: src/main/java/com/mediconnect/rest/soap/MediConnectSoapClient.java
  */
-@Service
-@RequiredArgsConstructor
+@Component
 @Slf4j
 public class MediConnectSoapClient {
 
-    private final WebServiceTemplate webServiceTemplate;
+    @Value("${soap.client.url}")
+    private String soapServiceUrl;
 
-    // ============================================
-    // PATIENTS
-    // ============================================
+    private MediConnectPort port;
 
     /**
-     * Créer un patient via SOAP
+     * IMPORTANT: Utiliser @PostConstruct au lieu du constructeur
+     * pour que Spring injecte @Value avant l'initialisation
      */
-    public PatientDTO creerPatient(PatientDTO patientDTO) {
-        log.info("Appel SOAP: Créer patient - {}", patientDTO.getEmail());
+    @PostConstruct
+    public void init() {
+        try {
+            log.info("🔧 Initialisation du client SOAP...");
+            log.info("📍 URL SOAP configurée: {}", soapServiceUrl);
 
-        // TODO: Convertir PatientDTO -> CreerPatientRequest
-        // TODO: Appeler le service SOAP
-        // TODO: Convertir la réponse -> PatientDTO
+            // Créer l'URL complète du WSDL
+            String wsdlUrl = soapServiceUrl + "/mediconnect.wsdl";
+            log.info("📄 WSDL URL: {}", wsdlUrl);
 
-        // Version temporaire sans classes générées
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP. " +
-                        "Exécutez: mvn generate-sources"
-        );
+            // Créer le service SOAP
+            URL url = new URL(wsdlUrl);
+            MediConnectPortService service = new MediConnectPortService(url);
+
+            // Obtenir le port (nom exact de la méthode générée par JAXWS)
+            this.port = service.getMediConnectPortSoap11();
+
+            log.info("✅ Client SOAP initialisé avec succès!");
+
+        } catch (Exception e) {
+            log.error("❌ ERREUR lors de l'initialisation du client SOAP", e);
+            log.error("   URL configurée: {}", soapServiceUrl);
+            log.error("   Message: {}", e.getMessage());
+            throw new RuntimeException("Impossible de se connecter au service SOAP: " + e.getMessage(), e);
+        }
     }
 
-    /**
-     * Obtenir un patient par ID via SOAP
-     */
-    public PatientDTO obtenirPatient(Long id) {
-        log.info("Appel SOAP: Obtenir patient - ID: {}", id);
+    // ==================== PATIENT ====================
 
-        // TODO: Implémenter après génération des classes
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public CreerPatientResponse creerPatient(CreerPatientRequest request) {
+        log.debug("🔵 SOAP Call: creerPatient");
+        try {
+            return port.creerPatient(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP creerPatient", e);
+            throw new RuntimeException("Erreur lors de la création du patient", e);
+        }
     }
 
-    /**
-     * Lister tous les patients via SOAP
-     */
-    public List<PatientDTO> listerPatients() {
-        log.info("Appel SOAP: Lister tous les patients");
-
-        // TODO: Implémenter après génération des classes
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public ObtenirPatientResponse obtenirPatient(ObtenirPatientRequest request) {
+        log.debug("🔵 SOAP Call: obtenirPatient");
+        try {
+            return port.obtenirPatient(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP obtenirPatient", e);
+            throw new RuntimeException("Erreur lors de la récupération du patient", e);
+        }
     }
 
-    // ============================================
-    // MÉDECINS
-    // ============================================
-
-    /**
-     * Créer un médecin via SOAP
-     */
-    public MedecinDTO creerMedecin(MedecinDTO medecinDTO) {
-        log.info("Appel SOAP: Créer médecin - {}", medecinDTO.getEmail());
-
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public ListerPatientsResponse listerPatients(ListerPatientsRequest request) {
+        log.debug("🔵 SOAP Call: listerPatients");
+        try {
+            return port.listerPatients(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP listerPatients", e);
+            throw new RuntimeException("Erreur lors du listage des patients", e);
+        }
     }
 
-    /**
-     * Obtenir un médecin par ID via SOAP
-     */
-    public MedecinDTO obtenirMedecin(Long id) {
-        log.info("Appel SOAP: Obtenir médecin - ID: {}", id);
+    // ==================== MÉDECIN ====================
 
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public CreerMedecinResponse creerMedecin(CreerMedecinRequest request) {
+        log.debug("🔵 SOAP Call: creerMedecin");
+        try {
+            return port.creerMedecin(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP creerMedecin", e);
+            throw new RuntimeException("Erreur lors de la création du médecin", e);
+        }
     }
 
-    /**
-     * Lister tous les médecins via SOAP
-     */
-    public List<MedecinDTO> listerMedecins() {
-        log.info("Appel SOAP: Lister tous les médecins");
-
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public ObtenirMedecinResponse obtenirMedecin(ObtenirMedecinRequest request) {
+        log.debug("🔵 SOAP Call: obtenirMedecin");
+        try {
+            return port.obtenirMedecin(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP obtenirMedecin", e);
+            throw new RuntimeException("Erreur lors de la récupération du médecin", e);
+        }
     }
 
-    // ============================================
-    // RENDEZ-VOUS
-    // ============================================
-
-    /**
-     * Créer un rendez-vous via SOAP
-     */
-    public RendezVousDTO creerRendezVous(RendezVousDTO rendezVousDTO) {
-        log.info("Appel SOAP: Créer rendez-vous");
-
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public ListerMedecinsResponse listerMedecins(ListerMedecinsRequest request) {
+        log.debug("🔵 SOAP Call: listerMedecins");
+        try {
+            return port.listerMedecins(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP listerMedecins", e);
+            throw new RuntimeException("Erreur lors du listage des médecins", e);
+        }
     }
 
-    /**
-     * Lister les rendez-vous d'un médecin via SOAP
-     */
-    public List<RendezVousDTO> listerRendezVousParMedecin(Long medecinId) {
-        log.info("Appel SOAP: Lister rendez-vous du médecin - ID: {}", medecinId);
+    // ==================== RENDEZ-VOUS ====================
 
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public CreerRendezVousResponse creerRendezVous(CreerRendezVousRequest request) {
+        log.debug("🔵 SOAP Call: creerRendezVous");
+        try {
+            return port.creerRendezVous(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP creerRendezVous", e);
+            throw new RuntimeException("Erreur lors de la création du rendez-vous", e);
+        }
     }
 
-    // ============================================
-    // DOSSIERS MÉDICAUX
-    // ============================================
-
-    /**
-     * Créer un dossier médical via SOAP
-     */
-    public DossierMedicalDTO creerDossierMedical(DossierMedicalDTO dossierDTO) {
-        log.info("Appel SOAP: Créer dossier médical");
-
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    public ObtenirRendezVousResponse obtenirRendezVous(ObtenirRendezVousRequest request) {
+        log.debug("🔵 SOAP Call: obtenirRendezVous");
+        try {
+            return port.obtenirRendezVous(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP obtenirRendezVous", e);
+            throw new RuntimeException("Erreur lors de la récupération du rendez-vous", e);
+        }
     }
 
-    /**
-     * Obtenir les dossiers d'un patient via SOAP
-     */
-    public List<DossierMedicalDTO> obtenirDossiersParPatient(Long patientId) {
-        log.info("Appel SOAP: Obtenir dossiers du patient - ID: {}", patientId);
+    public ListerRendezVousParMedecinResponse listerRendezVousParMedecin(ListerRendezVousParMedecinRequest request) {
+        log.debug("🔵 SOAP Call: listerRendezVousParMedecin");
+        try {
+            return port.listerRendezVousParMedecin(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP listerRendezVousParMedecin", e);
+            throw new RuntimeException("Erreur lors du listage des rendez-vous", e);
+        }
+    }
 
-        throw new UnsupportedOperationException(
-                "Méthode à implémenter après génération des classes SOAP"
-        );
+    // ==================== DOSSIER MÉDICAL ====================
+
+    public CreerDossierMedicalResponse creerDossierMedical(CreerDossierMedicalRequest request) {
+        log.debug("🔵 SOAP Call: creerDossierMedical");
+        try {
+            return port.creerDossierMedical(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP creerDossierMedical", e);
+            throw new RuntimeException("Erreur lors de la création du dossier médical", e);
+        }
+    }
+
+    public ObtenirDossiersParPatientResponse obtenirDossiersParPatient(ObtenirDossiersParPatientRequest request) {
+        log.debug("🔵 SOAP Call: obtenirDossiersParPatient");
+        try {
+            return port.obtenirDossiersParPatient(request);
+        } catch (Exception e) {
+            log.error("❌ Erreur SOAP obtenirDossiersParPatient", e);
+            throw new RuntimeException("Erreur lors de la récupération des dossiers", e);
+        }
     }
 }
-
-/*
- * INSTRUCTIONS POUR COMPLÉTER CE CLIENT:
- *
- * 1. Démarrer le service SOAP sur http://localhost:8080
- *
- * 2. Récupérer le WSDL:
- *    - Ouvrir: http://localhost:8080/ws/mediconnect.wsdl
- *    - Sauvegarder dans: src/main/resources/wsdl/mediconnect.wsdl
- *
- * 3. Générer les classes Java:
- *    - Exécuter: mvn generate-sources
- *    - Les classes seront dans: target/generated-sources/jaxb/
- *
- * 4. Implémenter les méthodes:
- *    Exemple pour creerPatient():
- *
- *    CreerPatientRequest request = new CreerPatientRequest();
- *    Patient patient = new Patient();
- *    patient.setNom(patientDTO.getNom());
- *    patient.setPrenom(patientDTO.getPrenom());
- *    // ... mapper tous les champs
- *    request.setPatient(patient);
- *
- *    CreerPatientResponse response = (CreerPatientResponse)
- *        webServiceTemplate.marshalSendAndReceive(request);
- *
- *    return convertToDTO(response.getPatient());
- */

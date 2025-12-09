@@ -1,46 +1,49 @@
+
+// ==================== PatientService.java ====================
 package com.mediconnect.rest.service;
 
 import com.mediconnect.rest.dto.PatientDTO;
 import com.mediconnect.rest.soap.MediConnectSoapClient;
+import com.mediconnect.rest.soap.SoapDtoMapper;
+import com.mediconnect.rest.soap.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Service REST pour gérer les patients
- * Consomme le service SOAP
- * Chemin: src/main/java/com/mediconnect/rest/service/PatientService.java
- */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PatientService {
 
     private final MediConnectSoapClient soapClient;
+    private final SoapDtoMapper mapper;
 
-    /**
-     * Créer un nouveau patient
-     */
     public PatientDTO creerPatient(PatientDTO patientDTO) {
-        log.info("REST -> SOAP: Création patient {}", patientDTO.getEmail());
-        return soapClient.creerPatient(patientDTO);
+        log.info("REST → SOAP: Création patient {}", patientDTO.getNom());
+
+        CreerPatientRequest request = mapper.patientDtoToCrerRequest(patientDTO);
+        CreerPatientResponse response = soapClient.creerPatient(request);
+
+        return mapper.soapPatientToDtoFrom(response.getPatient());
     }
 
-    /**
-     * Obtenir un patient par ID
-     */
-    public PatientDTO obtenirPatient(Long id) {
-        log.info("REST -> SOAP: Récupération patient ID: {}", id);
-        return soapClient.obtenirPatient(id);
+    public PatientDTO obtenirPatient(Long patientId) {
+        log.info("REST → SOAP: Récupération patient ID: {}", patientId);
+
+        ObtenirPatientRequest request = mapper.buildObtenirPatientRequest(patientId);
+        ObtenirPatientResponse response = soapClient.obtenirPatient(request);
+
+        return mapper.soapPatientToDtoFrom(response.getPatient());
     }
 
-    /**
-     * Lister tous les patients
-     */
     public List<PatientDTO> listerPatients() {
-        log.info("REST -> SOAP: Liste de tous les patients");
-        return soapClient.listerPatients();
+        log.info("REST → SOAP: Lister tous les patients");
+
+        ListerPatientsRequest request = mapper.buildListerPatientsRequest();
+        ListerPatientsResponse response = soapClient.listerPatients(request);
+
+        return mapper.soapPatientListToDtoList(response.getPatients());
     }
 }
