@@ -1,4 +1,4 @@
-package com.mediconnect.soap.endpoint;
+package com.mediconnect.soap;
 
 import com.mediconnect.soap.service.*;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +42,9 @@ import java.util.stream.Collectors;
 
 /**
  * Endpoint SOAP principal pour MediConnect
- * Chemin: src/main/java/com/mediconnect/soap/endpoint/MediConnectEndpoint.java
+ * ⚠️ CORRECTION: Supprimer @Component - @Endpoint suffit
  */
-@Endpoint
+@Endpoint  // ✅ @Endpoint inclut déjà @Component
 @RequiredArgsConstructor
 public class MediConnectEndpoint {
 
